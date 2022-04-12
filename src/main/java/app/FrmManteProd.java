@@ -142,10 +142,33 @@ public class FrmManteProd extends JFrame {
 		cboProveedores.setBounds(300, 104, 120, 22);
 		contentPane.add(cboProveedores);
 		
+		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buscar();
+			}
+		});
+		btnBuscar.setBounds(324, 63, 89, 23);
+		contentPane.add(btnBuscar);
+		
 		llenaCombo();
 		llenaComboProveedor();
 	}
 
+	void buscar() {
+		EntityManagerFactory fabrica = Persistence.createEntityManagerFactory("mysql");
+		EntityManager em = fabrica.createEntityManager();		
+		
+		Producto p = em.find(Producto.class, txtCódigo.getText());
+		
+		txtDescripcion.setText(p.getDescripcion());
+		cboCategorias.setSelectedIndex(p.getIdcategoria());
+		txtPrecio.setText(Double.toString(p.getPrecio()));
+		txtStock.setText(Integer.toString(p.getStock()));
+		cboProveedores.setSelectedItem(p.getProveedor().getNombre());
+		em.close();	
+	}
+	
 	void llenaCombo() {
 		EntityManagerFactory fabrica = Persistence.createEntityManagerFactory("mysql");
 		EntityManager em = fabrica.createEntityManager();
